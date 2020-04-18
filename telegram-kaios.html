@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Telegram</title>
+    <link rel="icon" href="https://zhukov.github.io/webogram/favicon.ico">
+</head>
+<body>
+</body>
+<script>
+fetch('https://zhukov.github.io/webogram/').then((response) => {
+  return response.text().then((html) => {
+    var page = new DOMParser().parseFromString(html, 'text/html').children[0];
+    page.querySelector('head title').innerHTML = 'Telegram';
+    page.querySelector('head').insertAdjacentHTML('afterbegin', '<base href="https://zhukov.github.io/webogram/">');
+    var setRequestHeader = XMLHttpRequest.prototype.setRequestHeader;
+    XMLHttpRequest.prototype.setRequestHeader = function (header) {
+      if (header === 'X-Requested-With') return;
+      return setRequestHeader.apply(this, arguments);
+    }
+    //Object.defineProperty(window.navigator, 'serviceWorker', {get: () => null});
+    window.Worker = null;
+    //window.Notification = null;
+    //window.PushManager = null;
+    document.write(page.outerHTML);
+    document.querySelector('script[src="js/app.js"]').onload = () => window.jQuery.ready();
+  });
+});
+</script>
+</html>
